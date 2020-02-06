@@ -108,6 +108,15 @@ def hci_le_set_scan_parameters(sock):
     OWN_TYPE = SCAN_RANDOM
     SCAN_TYPE = 0x01
 
+    
+def le_handle_connection_complete(pkt):
+    status, handle, role, peer_bdaddr_type = struct.unpack("<BHBB", pkt[0:5])
+    device_address = packed_bdaddr_to_string(pkt[5:11])
+    interval, latency, supervision_timeout, master_clock_accuracy = struct.unpack("<HHHB", pkt[11:])
+    print "status: 0x%02x\nhandle: 0x%04x" % (status, handle)
+    print "role: 0x%02x" % role
+    print "device address: ", device_address
+
 
 def parse_events(sock, loop_count=100):
     old_filter = sock.getsockopt(bluez.SOL_HCI, bluez.HCI_FILTER, 14)
